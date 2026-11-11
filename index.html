@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10243a">
+  <title>FCI Gesture Assistant</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">FCI</div>
+    <div>
+      <p class="eyebrow">FACULTAD DE CIENCIAS DE LA INFORMACIÓN</p>
+      <h1>Gesture Assistant</h1>
+    </div>
+    <span class="top-tag">MediaPipe + Arduino</span>
+  </header>
+
+  <main class="layout">
+    <section class="intro">
+      <p class="eyebrow">INTERACCIÓN INTELIGENTE</p>
+      <h2>Comunícate con<br><span>tus manos.</span></h2>
+      <p>La cámara reconoce tus gestos y la aplicación responde con mensajes de voz. Los gestos de pulgar también controlan un LED conectado a Arduino.</p>
+      <div class="status-row">
+        <span id="modelStatus" class="status-dot">● Modelo sin iniciar</span>
+        <span id="cameraStatus" class="status-dot muted">● Cámara desconectada</span>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div class="camera-panel panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">RECONOCIMIENTO EN TIEMPO REAL</p><h3>Cámara</h3></div>
+          <span id="confidence" class="confidence">-- %</span>
+        </div>
+        <div class="video-wrap">
+          <video id="webcam" autoplay playsinline muted></video>
+          <canvas id="overlay"></canvas>
+          <div id="cameraPlaceholder" class="placeholder">
+            <div class="camera-icon">⌁</div>
+            <strong>Tu cámara aparecerá aquí</strong>
+            <span>Presiona “Iniciar cámara” para comenzar</span>
+          </div>
+          <div id="gesturePill" class="gesture-pill">Esperando gesto</div>
+        </div>
+        <div class="camera-actions">
+          <button id="startBtn" class="btn primary">Iniciar cámara</button>
+          <button id="stopBtn" class="btn secondary" disabled>Detener</button>
+        </div>
+        <p id="appMessage" class="message" role="status">Primero inicia el modelo y concede permiso para utilizar la cámara.</p>
+      </div>
+
+      <aside class="side-column">
+        <div class="panel current-panel">
+          <p class="eyebrow">GESTO DETECTADO</p>
+          <div id="currentGesture" class="current-gesture">—</div>
+          <p id="currentDescription" class="muted-text">Coloca tu mano frente a la cámara.</p>
+          <div class="divider"></div>
+          <p class="eyebrow">RESPUESTA DE VOZ</p>
+          <p id="speechText" class="speech-text">Los mensajes aparecerán aquí.</p>
+        </div>
+
+        <div class="panel hardware-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">DISPOSITIVO FÍSICO</p><h3>Arduino Leonardo</h3></div>
+            <span id="serialIndicator" class="serial-indicator">Desconectado</span>
+          </div>
+          <p class="muted-text">Conecta el Arduino por USB para controlar el LED desde los gestos de pulgar.</p>
+          <button id="connectBtn" class="btn outline">Conectar Arduino</button>
+          <div class="led-state">
+            <span id="ledBulb" class="led-bulb"></span>
+            <div><strong id="ledLabel">LED apagado</strong><small id="serialMessage">Puerto serie no conectado</small></div>
+          </div>
+          <div class="serial-actions">
+            <button id="testOnBtn" class="btn tiny" disabled>Probar A · Encender</button>
+            <button id="testOffBtn" class="btn tiny" disabled>Probar B · Apagar</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="gestures-section">
+      <div class="section-heading">
+        <div><p class="eyebrow">CATÁLOGO DE INTERACCIÓN</p><h3>Gestos disponibles</h3></div>
+        <span class="muted-text">7 acciones configuradas</span>
+      </div>
+      <div id="gestureGrid" class="gesture-grid"></div>
+    </section>
+
+    <footer>
+      <span>FCI Gesture Assistant</span>
+      <span>Reconocimiento local · MediaPipe Tasks Vision</span>
+    </footer>
+  </main>
+</body>
+</html>
