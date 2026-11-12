@@ -1,98 +1,88 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#10243a">
-  <title>FCI Gesture Assistant</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module" src="app.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a1422">
+<title>FCI Gesture Assistant 2.0 | UNACAR</title>
+<link rel="stylesheet" href="style.css">
+<script type="module" src="app.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand-mark">FCI</div>
-    <div>
-      <p class="eyebrow">FACULTAD DE CIENCIAS DE LA INFORMACIÓN</p>
-      <h1>Gesture Assistant</h1>
+<header class="masthead">
+  <div class="brands">
+    <a class="brand unacar" href="https://www.unacar.mx/" target="_blank" rel="noreferrer" aria-label="Sitio oficial UNACAR">
+      <span class="brand-seal">U</span><span><b>UNACAR</b><small>Universidad Autónoma<br>del Carmen</small></span>
+    </a>
+    <span class="brand-divider"></span>
+    <a class="brand fci" href="https://www.unacar.mx/" target="_blank" rel="noreferrer" aria-label="Facultad de Ciencias de la Información">
+      <span class="fci-mark">FCI</span><span><b>FACULTAD DE</b><small>CIENCIAS DE LA<br>INFORMACIÓN</small></span>
+    </a>
+  </div>
+  <div class="top-note"><i></i> DEMOSTRADOR INTERACTIVO <span>VERSIÓN 2.0</span></div>
+</header>
+
+<main class="container">
+<section class="hero">
+  <div>
+    <p class="kicker">INTELIGENCIA ARTIFICIAL · VISIÓN POR COMPUTADORA</p>
+    <h1>Las manos también<br><em>pueden hablar.</em></h1>
+    <p class="hero-copy">Una experiencia interactiva que interpreta gestos con inteligencia artificial, responde con voz y convierte una señal en una acción física.</p>
+    <div class="hero-foot"><span><i class="pulse"></i> Procesamiento local en el navegador</span><span>MediaPipe Gesture Recognizer</span></div>
+  </div>
+  <div class="hero-graphic" aria-hidden="true"><div class="orbit o1"></div><div class="orbit o2"></div><div class="hand-emoji">✋</div><b>21 LANDMARKS</b><small>AI VISION</small></div>
+</section>
+
+<section class="status-bar">
+  <div class="status-cell"><i id="modelLed"></i><span><small>MODELO IA</small><b id="modelStatus">Pendiente</b></span></div>
+  <div class="status-cell"><i id="cameraLed"></i><span><small>CÁMARA</small><b id="cameraStatus">Desconectada</b></span></div>
+  <div class="status-cell"><i id="serialLed"></i><span><small>ARDUINO LEONARDO</small><b id="serialStatus">No conectado</b></span></div>
+  <p>El video se procesa en esta computadora. No se transmite al servidor.</p>
+</section>
+
+<section class="main-grid">
+  <article class="panel vision">
+    <div class="panel-title"><div><p class="kicker">01 / VISIÓN ARTIFICIAL</p><h2>Seguimiento de la mano</h2></div><span class="live-tag"><i class="pulse"></i> EN VIVO</span></div>
+    <div class="camera-stage">
+      <video id="webcam" autoplay playsinline muted></video><canvas id="overlay"></canvas>
+      <div class="camera-placeholder" id="cameraPlaceholder"><span>✋</span><b>Prepara tu demostración</b><small>Activa la cámara y coloca tu mano en el encuadre.</small></div>
+      <div class="tracking-label"><i id="trackingLed"></i><span id="trackingText">ESPERANDO CÁMARA</span></div>
+      <div class="detected-label" id="gesturePill">SIN GESTO</div>
+      <i class="frame tl"></i><i class="frame tr"></i><i class="frame bl"></i><i class="frame br"></i>
     </div>
-    <span class="top-tag">MediaPipe + Arduino</span>
-  </header>
+    <div class="controls">
+      <button id="startBtn" class="btn primary">▶ Iniciar cámara</button><button id="stopBtn" class="btn quiet" disabled>Detener</button>
+      <div class="confidence"><div><small>CONFIANZA</small><b id="confidence">—%</b></div><div class="bar"><i id="confidenceBar"></i></div></div>
+    </div>
+    <div class="legend"><span><i class="dot-landmark"></i> Puntos articulares</span><span><i class="line-landmark"></i> Conexiones</span><span><i class="tip-landmark"></i> Puntas de dedos</span></div>
+    <p class="message" id="appMessage" role="status">Inicia la cámara y muestra uno de los siete gestos.</p>
+  </article>
 
-  <main class="layout">
-    <section class="intro">
-      <p class="eyebrow">INTERACCIÓN INTELIGENTE</p>
-      <h2>Comunícate con<br><span>tus manos.</span></h2>
-      <p>La cámara reconoce tus gestos y la aplicación responde con mensajes de voz. Los gestos de pulgar también controlan un LED conectado a Arduino.</p>
-      <div class="status-row">
-        <span id="modelStatus" class="status-dot">● Modelo sin iniciar</span>
-        <span id="cameraStatus" class="status-dot muted">● Cámara desconectada</span>
-      </div>
-    </section>
+  <aside class="side">
+    <article class="panel recognition">
+      <div class="panel-title"><div><p class="kicker">02 / CLASIFICACIÓN</p><h2>Gesto identificado</h2></div><span class="ai-chip">AI</span></div>
+      <div class="gesture-display" id="gestureDisplay"><div class="gesture-orb"><span id="gestureEmoji">✋</span></div><h3 id="currentGesture">Esperando gesto</h3><p id="currentDescription">Coloca tu mano frente a la cámara.</p></div>
+      <div class="metrics"><div><small>CLASE</small><b id="className">—</b></div><div><small>PROBABILIDAD</small><b id="scoreValue">—</b></div><div><small>MANOS</small><b id="handsValue">0</b></div></div>
+      <div class="separator"></div>
+      <p class="kicker">03 / RESPUESTA DE VOZ</p>
+      <div class="speech"><span>♫</span><p id="speechText">El mensaje del gesto aparecerá aquí.</p></div>
+      <div class="speech-footer"><button id="replayBtn" class="btn quiet small" disabled>↻ Repetir mensaje</button><small id="speechStatus">TTS en español</small></div>
+    </article>
 
-    <section class="workspace">
-      <div class="camera-panel panel">
-        <div class="panel-heading">
-          <div><p class="eyebrow">RECONOCIMIENTO EN TIEMPO REAL</p><h3>Cámara</h3></div>
-          <span id="confidence" class="confidence">-- %</span>
-        </div>
-        <div class="video-wrap">
-          <video id="webcam" autoplay playsinline muted></video>
-          <canvas id="overlay"></canvas>
-          <div id="cameraPlaceholder" class="placeholder">
-            <div class="camera-icon">⌁</div>
-            <strong>Tu cámara aparecerá aquí</strong>
-            <span>Presiona “Iniciar cámara” para comenzar</span>
-          </div>
-          <div id="gesturePill" class="gesture-pill">Esperando gesto</div>
-        </div>
-        <div class="camera-actions">
-          <button id="startBtn" class="btn primary">Iniciar cámara</button>
-          <button id="stopBtn" class="btn secondary" disabled>Detener</button>
-        </div>
-        <p id="appMessage" class="message" role="status">Primero inicia el modelo y concede permiso para utilizar la cámara.</p>
-      </div>
+    <article class="panel hardware">
+      <div class="panel-title"><div><p class="kicker">04 / INTERNET DE LAS COSAS</p><h2>Control del LED</h2></div><span class="hardware-symbol">⌁</span></div>
+      <div class="led-box"><div id="ledVisual" class="led-visual"><i></i></div><span><b id="ledLabel">LED apagado</b><small id="serialMessage">Conecta Arduino para habilitar el control.</small></span></div>
+      <button id="connectBtn" class="btn outline">Conectar Arduino Leonardo</button>
+      <div class="serial-buttons"><button id="testOnBtn" class="btn quiet mini" disabled>A · Encender</button><button id="testOffBtn" class="btn quiet mini" disabled>B · Apagar</button></div>
+      <p class="hardware-note">Pulgar arriba envía <b>A</b> · Pulgar abajo envía <b>B</b></p>
+    </article>
+  </aside>
+</section>
 
-      <aside class="side-column">
-        <div class="panel current-panel">
-          <p class="eyebrow">GESTO DETECTADO</p>
-          <div id="currentGesture" class="current-gesture">—</div>
-          <p id="currentDescription" class="muted-text">Coloca tu mano frente a la cámara.</p>
-          <div class="divider"></div>
-          <p class="eyebrow">RESPUESTA DE VOZ</p>
-          <p id="speechText" class="speech-text">Los mensajes aparecerán aquí.</p>
-        </div>
+<section class="library">
+  <div class="section-title"><div><p class="kicker">05 / BIBLIOTECA DE GESTOS</p><h2>Siete formas de interactuar</h2></div><p>El gesto activo se iluminará al reconocerlo.</p></div>
+  <div id="gestureGrid" class="gesture-grid"></div>
+</section>
 
-        <div class="panel hardware-panel">
-          <div class="panel-heading">
-            <div><p class="eyebrow">DISPOSITIVO FÍSICO</p><h3>Arduino Leonardo</h3></div>
-            <span id="serialIndicator" class="serial-indicator">Desconectado</span>
-          </div>
-          <p class="muted-text">Conecta el Arduino por USB para controlar el LED desde los gestos de pulgar.</p>
-          <button id="connectBtn" class="btn outline">Conectar Arduino</button>
-          <div class="led-state">
-            <span id="ledBulb" class="led-bulb"></span>
-            <div><strong id="ledLabel">LED apagado</strong><small id="serialMessage">Puerto serie no conectado</small></div>
-          </div>
-          <div class="serial-actions">
-            <button id="testOnBtn" class="btn tiny" disabled>Probar A · Encender</button>
-            <button id="testOffBtn" class="btn tiny" disabled>Probar B · Apagar</button>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="gestures-section">
-      <div class="section-heading">
-        <div><p class="eyebrow">CATÁLOGO DE INTERACCIÓN</p><h3>Gestos disponibles</h3></div>
-        <span class="muted-text">7 acciones configuradas</span>
-      </div>
-      <div id="gestureGrid" class="gesture-grid"></div>
-    </section>
-
-    <footer>
-      <span>FCI Gesture Assistant</span>
-      <span>Reconocimiento local · MediaPipe Tasks Vision</span>
-    </footer>
-  </main>
-</body>
-</html>
+<footer><div><b>UNACAR <i>×</i> FCI</b><small>Por la Grandeza de México</small></div><p>FCI Gesture Assistant 2.0<br><small>MediaPipe · Web Speech API · Web Serial API</small></p></footer>
+</main>
+</body></html>

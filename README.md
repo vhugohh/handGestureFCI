@@ -1,72 +1,69 @@
-# FCI Gesture Assistant
+# FCI Gesture Assistant 2.0 — UNACAR
 
-Aplicación web para reconocer siete gestos de mano con MediaPipe, reproducir mensajes en español mediante TTS y controlar un LED conectado a Arduino Leonardo.
+Aplicación web que reconoce siete gestos con MediaPipe, reproduce mensajes mediante síntesis de voz y controla un LED conectado a Arduino Leonardo.
 
-## Características
+## Mejoras 2.0
+- Interfaz institucional tipográfica UNACAR × FCI.
+- Animación de entrada y animación al identificar cada gesto.
+- Dibujo de los 21 hand landmarks y conexiones de la mano.
+- Puntas de los dedos resaltadas.
+- Seguimiento de hasta dos manos y contador de manos.
+- Porcentaje de confianza y barra visual.
+- Panel de voz con botón para repetir.
+- Panel de estado y pruebas manuales de Arduino.
 
-- Reconocimiento de `Closed_Fist`, `Open_Palm`, `Pointing_Up`, `Thumb_Up`, `Thumb_Down`, `ILoveYou` y `Victory`.
-- Procesamiento de cámara en el navegador.
-- Síntesis de voz en español mexicano (`es-MX`) mediante Web Speech API.
-- Comunicación serial con Arduino Leonardo mediante Web Serial API.
-- Filtro de confianza y estabilización de cinco fotogramas para reducir activaciones accidentales.
-- Botones para probar el encendido y apagado del LED.
+## Nota sobre logotipos
+No se proporcionó un archivo oficial de los logotipos. Por ello el encabezado utiliza una **identificación tipográfica temporal** (UNACAR y FCI), no una reproducción del escudo oficial. El sitio de UNACAR publica sus símbolos e identidad visual:
+- https://www.unacar.mx/historia/
+- Guía/identidad institucional: https://www.unacar.mx/unacar/Documentos/logotipo22-26/EDUCANDO-VF-SLOGAN-%28IDENTIDAD%29.pdf
+
+Cuando se disponga de los archivos gráficos autorizados, pueden guardarse en `assets/` y reemplazar los bloques `.brand-seal` y `.fci-mark` en `index.html` por elementos `<img>`.
 
 ## Requisitos
-
-- Google Chrome o Microsoft Edge actualizado.
+- Chrome o Microsoft Edge actualizado.
 - Cámara web.
-- Conexión a Internet para cargar MediaPipe y el modelo en la primera ejecución.
-- Arduino Leonardo y cable USB para la función del LED.
-- Para cámara y puerto serie: HTTPS o `localhost`.
+- Internet para descargar MediaPipe y el modelo.
+- Arduino Leonardo para el LED.
+- HTTPS o `localhost` para cámara y Web Serial.
 
 ## Ejecutar localmente
-
 1. Instala Python 3.
-2. Abre una terminal dentro de esta carpeta.
-3. Ejecuta:
+2. En la carpeta del proyecto ejecuta `python server.py`.
+3. Abre `http://localhost:8000` en Chrome o Edge.
+4. Pulsa **Iniciar cámara** y concede permiso.
+5. Abre `arduino/FCI_Gesture_LED.ino` en Arduino IDE, selecciona Arduino Leonardo y carga el programa.
+6. Cierra el Monitor Serie del IDE.
+7. Pulsa **Conectar Arduino** y selecciona el puerto COM.
 
-   ```bash
-   python server.py
-   ```
+No abras `index.html` directamente con `file://`.
 
-4. Abre `http://localhost:8000` en Chrome o Edge.
-5. Presiona **Iniciar cámara** y concede permiso.
-6. Para controlar el LED, carga `arduino/FCI_Gesture_LED.ino` en el Arduino Leonardo desde Arduino IDE.
-7. Cierra el Monitor Serie del IDE si está abierto.
-8. En la aplicación, presiona **Conectar Arduino** y selecciona el puerto correspondiente.
+## Gestos
+| MediaPipe | Respuesta |
+|---|---|
+| Closed_Fist | Despedida |
+| Open_Palm | Bienvenida |
+| Pointing_Up | Presentación de carreras |
+| Thumb_Up | Voz + comando `A` para encender LED |
+| Thumb_Down | Voz + comando `B` para apagar LED |
+| ILoveYou | Mensaje I Love You |
+| Victory | Mensaje Peace / Victory |
 
-No abras `index.html` directamente con `file://`: utiliza el servidor local.
+El gesto se activa después de cinco fotogramas consecutivos y una confianza mínima del 65 %.
 
-## Conexión del LED
+## Arduino
+El sketch utiliza el LED integrado del pin 13. Para un LED externo: pin 13 → resistencia 220–330 Ω → ánodo del LED; cátodo → GND.
+- `A`: encender.
+- `B`: apagar.
+- 9600 baudios.
 
-El sketch utiliza el LED integrado del pin 13 del Leonardo. Para un LED externo:
+## GitHub y Render
+1. Sube el contenido de esta carpeta a GitHub.
+2. En Render crea un **Static Site** conectado al repositorio.
+3. Build Command: vacío.
+4. Publish Directory: `.`.
+5. Despliega.
 
-- Pin 13 -> resistencia de 220 a 330 ohms -> ánodo (pata larga) del LED.
-- Cátodo (pata corta) -> GND.
+Render sirve los archivos web. La cámara y Arduino son los dispositivos locales de cada visitante; no se conectan al servidor.
 
-El comando `A` enciende y `B` apaga.
-
-## Publicar en GitHub y Render
-
-1. Crea un repositorio en GitHub y sube todos los archivos.
-2. En Render selecciona **New > Static Site**.
-3. Conecta el repositorio.
-4. Usa la rama principal, deja vacío el comando de compilación y establece `.` como directorio de publicación.
-5. Despliega el sitio.
-
-Render publica el frontend mediante HTTPS. El navegador del visitante debe tener conectados su propia cámara y Arduino. El Arduino no se conecta al servidor Render.
-
-## Notas y solución de problemas
-
-- Si la cámara no abre, verifica permisos del sitio y que otra aplicación no la esté utilizando.
-- Si el modelo no carga, comprueba la conexión a Internet y recarga.
-- Si no se escucha voz, revisa el volumen y que el navegador permita audio.
-- La voz disponible depende de las voces instaladas en el sistema operativo. `es-MX` solicita español de México, pero no garantiza una voz específica.
-- Web Serial no está disponible en todos los navegadores. Usa Chrome o Edge de escritorio.
-- El usuario debe autorizar la selección del puerto desde el botón de conexión.
-- Si Arduino no responde, verifica que el Monitor Serie esté cerrado y que la velocidad sea 9600 baudios.
-- El LED solo cambia cuando el puerto serie está conectado. La voz se reproduce aunque Arduino no esté conectado.
-
-## Privacidad
-
-El video se procesa en el navegador. Esta aplicación no transmite ni almacena imágenes de la cámara. MediaPipe y el modelo se descargan desde sus CDN oficiales.
+## Privacidad y compatibilidad
+El video se procesa en el navegador y no se transmite al servidor. El modelo se descarga desde CDN. Web Serial funciona en Chrome/Edge de escritorio y requiere autorización del usuario. La voz `es-MX` depende de las voces disponibles en el sistema operativo.

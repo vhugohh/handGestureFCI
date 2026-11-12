@@ -1,0 +1,1 @@
+Logotipos oficiales pendientes de incorporar. Consultar identidad institucional UNACAR: https://www.unacar.mx/historia/ y manual institucional: https://www.unacar.mx/unacar/Documentos/logotipo22-26/EDUCANDO-VF-SLOGAN-%28IDENTIDAD%29.pdf. El encabezado actual es tipográfico y no debe confundirse con los escudos oficiales.
